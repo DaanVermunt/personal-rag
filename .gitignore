@@ -1,0 +1,4 @@
+.idea
+volumes
+data
+**/__pycache__
