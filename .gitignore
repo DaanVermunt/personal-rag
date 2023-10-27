@@ -2,4 +2,4 @@
 volumes
 data
 **/__pycache__
-/src/secrets.py
+.env

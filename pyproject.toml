@@ -8,6 +8,7 @@ authors = ["Daan Vermunt <daanvermunt@gmail.com>"]
 python = "^3.10"
 pymilvus = "^2.3.2"
 openai = "^0.28.1"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
