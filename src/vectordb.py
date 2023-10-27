@@ -17,8 +17,9 @@ from pymilvus import (
 )
 
 fmt = "\n=== {:30} ===\n"
-search_latency_fmt = "search latency = {:.4f}s"
-num_entities, dim = 3000, 8
+dim = 1536
+
+my_collection_name = 'contract'
 
 
 #################################################################################
@@ -53,8 +54,8 @@ def connect():
 def create_collection(collection_name):
     drop_collection(collection_name)
     fields = [
-        FieldSchema(name="pk", dtype=DataType.VARCHAR, is_primary=True, auto_id=False, max_length=100),
-        FieldSchema(name="random", dtype=DataType.DOUBLE),
+        FieldSchema(name="pk", dtype=DataType.VARCHAR, is_primary=True, auto_id=True, max_length=100),
+        FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=2048),
         FieldSchema(name="embeddings", dtype=DataType.FLOAT_VECTOR, dim=dim)
     ]
 
@@ -65,6 +66,9 @@ def create_collection(collection_name):
     return collection
 
 
+def get_collection(collection_name):
+    return Collection(collection_name)
+
 ################################################################################
 # 3. insert data
 # We are going to insert 3000 rows of data into `hello_milvus`
@@ -74,14 +78,12 @@ def create_collection(collection_name):
 # - either automatically generated primary keys by Milvus if auto_id=True in the schema;
 # - or the existing primary key field from the entities if auto_id=False in the schema.
 
-def insert_data(collection):
+def insert_data(collection, embeddings, texts):
+    # TODO INSERT LIST OF TEXTS, AND EMBEDDINGS
     print(fmt.format("Start inserting entities"))
-    rng = np.random.default_rng(seed=19530)
     entities = [
-        # provide the pk field because `auto_id` is set to False
-        [str(i) for i in range(num_entities)],
-        rng.random(num_entities).tolist(),  # field random, only supports list
-        rng.random((num_entities, dim)),  # field embeddings, supports numpy.ndarray and list
+        texts,
+        embeddings,
     ]
 
     collection.insert(entities)
